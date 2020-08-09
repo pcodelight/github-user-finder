@@ -1,9 +1,12 @@
 package com.pcodelight.tiket.view
 
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager.VERTICAL
 import com.mikepenz.fastadapter.FastAdapter
 import com.mikepenz.fastadapter.GenericFastAdapter
 import com.mikepenz.fastadapter.adapters.ItemAdapter
@@ -13,29 +16,39 @@ import com.pcodelight.tiket.Injection
 import com.pcodelight.tiket.R
 import com.pcodelight.tiket.model.User
 import com.pcodelight.tiket.ui.LoadingItem
-import com.pcodelight.tiket.ui.NoActivityItem
+import com.pcodelight.tiket.ui.StatusActivityItem
 import com.pcodelight.tiket.ui.SearchBoxItem
+import com.pcodelight.tiket.ui.UserItem
 import com.pcodelight.tiket.viewmodel.UserViewModel
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
-    lateinit var endlessScrollListener: EndlessRecyclerOnScrollListener
+    lateinit var endlessRecyclerOnScrollListener: EndlessRecyclerOnScrollListener
 
     private val itemAdapter = ItemAdapter<AbstractItem<*>>()
     private val footerAdapter = ItemAdapter<AbstractItem<*>>()
-    private val adapter: GenericFastAdapter = FastAdapter.with(
-        listOf(itemAdapter, footerAdapter)
+    private val headerAdapter = ItemAdapter<AbstractItem<*>>()
+    private val rvAdapter: GenericFastAdapter = FastAdapter.with(
+        listOf(
+            headerAdapter,
+            itemAdapter,
+            footerAdapter
+        )
     )
-    private val viewModel: UserViewModel = ViewModelProvider(
-        this,
-        Injection.provideViewModelFactory()
-    ).get(
-        UserViewModel::class.java
-    )
-
+    private lateinit var viewModel: UserViewModel
     private var query = ""
-    private val usersObserver = Observer<List<User>> {
+    private var firstLoad = true
 
+    private val usersObserver = Observer<List<User>> {
+        Log.d("UserFinder", "Data received ${it.size}")
+        itemAdapter.set(
+            it.map{ user ->
+                UserItem {
+                    photoUrl = user.getSmallPhotoUrl()
+                    name = user.name
+                }
+            }
+        )
     }
 
     private val errorMessageObserver = Observer<String> {
@@ -60,48 +73,57 @@ class MainActivity : AppCompatActivity() {
     }
 
     private val onSearch: (String) -> Unit = {
+        Log.d("UserFinder", "Query Search on $it")
         viewModel.searchUsers(it, 1)
     }
 
     private fun loadMore(currentPage: Int) {
+        Log.d("UserFinder", "LoadMore With Current Page $currentPage")
         viewModel.searchUsers(query, currentPage + 1)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        rvParent.adapter = adapter
-        endlessScrollListener = object: EndlessRecyclerOnScrollListener() {
-            override fun onLoadMore(currentPage: Int) {
-                loadMore(currentPage)
-            }
-        }
 
         initRender()
         initViewModel()
     }
 
     private fun initRender() {
-        itemAdapter.add(
-            SearchBoxItem {
-                onSearchListener = onSearch
-                text = ""
-            },
-            NoActivityItem()
-        )
-    }
+        rvParent.apply {
+            adapter = rvAdapter
+            layoutManager = LinearLayoutManager(this@MainActivity, VERTICAL, false)
+            endlessRecyclerOnScrollListener = object : EndlessRecyclerOnScrollListener(footerAdapter) {
+                override fun onLoadMore(currentPage: Int) {
+                    if (!firstLoad) {
+                        loadMore(currentPage)
+                        firstLoad = false
+                    }
+                }
+            }
+            addOnScrollListener(endlessRecyclerOnScrollListener)
+        }
 
-    private fun render(users: List<User>) {
-        itemAdapter.add(
+        headerAdapter.add(
             SearchBoxItem {
                 onSearchListener = onSearch
                 text = ""
             }
         )
+
+        itemAdapter.add(
+            StatusActivityItem()
+        )
     }
 
     private fun initViewModel() {
-        viewModel.run {
+        viewModel = ViewModelProvider(
+            this,
+            Injection.provideViewModelFactory()
+        ).get(
+            UserViewModel::class.java
+        ).apply {
             users.observe(this@MainActivity, usersObserver)
             errorMsg.observe(this@MainActivity, errorMessageObserver)
             isLoading.observe(this@MainActivity, loadingObserver)

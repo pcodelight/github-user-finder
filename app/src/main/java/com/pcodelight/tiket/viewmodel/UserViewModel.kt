@@ -7,7 +7,7 @@ import com.pcodelight.tiket.model.User
 import com.pcodelight.tiket.model.UserDataSource
 import com.pcodelight.tiket.service.ApiCallback
 
-class UserViewModel(private val repo: UserDataSource): ViewModel() {
+class UserViewModel(private val repo: UserDataSource) : ViewModel() {
     private val _users = MutableLiveData<List<User>>().apply {
         value = emptyList()
     }
@@ -28,13 +28,17 @@ class UserViewModel(private val repo: UserDataSource): ViewModel() {
         _isLoading.postValue(page == 1)
         _isLoadingMore.postValue(page > 1)
 
-        repo.searchUser(query, page, object: ApiCallback<User> {
+        repo.searchUser(query, page, object : ApiCallback<User> {
             override fun onSuccess(data: List<User>?) {
                 _isLoading.postValue(false)
                 _isLoadingMore.postValue(false)
 
                 data?.let {
-                    _users.postValue(it)
+                    if (page > 1) {
+                        _users.postValue(_users.value?.plus(it))
+                    } else {
+                        _users.postValue(it)
+                    }
                 }
             }
 

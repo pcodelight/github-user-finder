@@ -25,7 +25,7 @@ class UserDataRepository: UserDataSource {
                     if (response.isSuccessful) {
                         callback.onSuccess(it.items)
                     } else {
-                        callback.onError(it.message)
+                        callback.onError("There is someting wrong :(")
                     }
                 }
             }

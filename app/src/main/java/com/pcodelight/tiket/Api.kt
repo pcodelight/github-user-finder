@@ -5,7 +5,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 class Api {
     companion object {
-        const val OBJECT_PER_PAGE = 10
+        const val OBJECT_PER_PAGE = 20
         const val BASE_URL = "https://api.github.com"
 
         val instance: Retrofit by lazy {

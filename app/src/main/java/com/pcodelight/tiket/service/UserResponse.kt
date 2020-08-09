@@ -4,5 +4,6 @@ import com.pcodelight.tiket.model.User
 
 data class UserResponse(
     val items: List<User>,
-    val message: String
+    val total_count: Int,
+    val incomplete_results: Boolean
 )
