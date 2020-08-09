@@ -13,10 +13,7 @@ class NoActivityItem : AbstractItem<NoActivityItem.ViewHolder>() {
     override fun getViewHolder(v: View): ViewHolder = ViewHolder(v)
 
     class ViewHolder(val view: View): FastAdapter.ViewHolder<NoActivityItem>(view) {
-        override fun bindView(item: NoActivityItem, payloads: List<Any>) {
-        }
-
-        override fun unbindView(item: NoActivityItem) {
-        }
+        override fun bindView(item: NoActivityItem, payloads: List<Any>) {}
+        override fun unbindView(item: NoActivityItem) {}
     }
 }
