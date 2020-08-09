@@ -12,12 +12,10 @@ class UserViewModel(private val repo: UserDataSource): ViewModel() {
         value = emptyList()
     }
     private val _isLoading = MutableLiveData<Boolean>()
-    private val _isEmpty = MutableLiveData<Boolean>()
     private val _errorMsg = MutableLiveData<String>()
 
     val users: LiveData<List<User>> = _users
     val isLoading: LiveData<Boolean> = _isLoading
-    val isEmpty: LiveData<Boolean> = _isEmpty
     val errorMsg: LiveData<String> = _errorMsg
 
     fun searchUsers(query: String, page: Int) {
@@ -27,11 +25,7 @@ class UserViewModel(private val repo: UserDataSource): ViewModel() {
             override fun onSuccess(data: List<User>?) {
                 _isLoading.postValue(false)
                 data?.let {
-                    if (it.isNotEmpty()) {
-                        _users.postValue(it)
-                    } else {
-                        _isEmpty.postValue(true)
-                    }
+                    _users.postValue(it)
                 }
             }
 

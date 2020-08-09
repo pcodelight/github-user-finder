@@ -26,7 +26,15 @@ class MainActivity : AppCompatActivity() {
     )
 
     private val usersObserver = Observer<List<User>> {
-        render()
+
+    }
+
+    private val errorMessageObserver = Observer<String> {
+
+    }
+
+    private val loadingObserver = Observer<Boolean> {
+
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -44,16 +52,23 @@ class MainActivity : AppCompatActivity() {
         )
     }
 
-    private fun render() {
-
+    private fun render(users: List<User>) {
+        itemAdapter.add(
+            SearchBoxItem()
+        )
     }
 
+
+
     private fun initViewModel() {
-        viewModel.users.observe(this, )
+        viewModel.run {
+            users.observe(this@MainActivity, usersObserver)
+            errorMsg.observe(this@MainActivity, errorMessageObserver)
+            isLoading.observe(this@MainActivity, loadingObserver)
+        }
     }
 
     override fun onResume() {
         super.onResume()
-        viewModel.searchUsers()
     }
 }
