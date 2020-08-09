@@ -7,5 +7,5 @@ import retrofit2.http.Query
 
 interface GithubService {
     @GET("search/users")
-    fun searchUser(@Query("q") username: String = "") : Call<ArrayList<User>>
+    fun searchUser(@Query("q") username: String = "") : Call<UserResponse>
 }

@@ -6,10 +6,8 @@ import com.mikepenz.fastadapter.items.AbstractItem
 import com.pcodelight.tiket.R
 
 class UserItem : AbstractItem<UserItem.ViewHolder>() {
-    override val layoutRes: Int
-        get() = R.layout.user_item_layout
-    override val type: Int
-        get() = UserItem::class.java.hashCode()
+    override val layoutRes: Int get() = R.layout.user_item_layout
+    override val type: Int get() = UserItem::class.java.hashCode()
     override fun getViewHolder(v: View): ViewHolder = ViewHolder(v)
 
     class ViewHolder(val view: View): FastAdapter.ViewHolder<UserItem>(view) {
