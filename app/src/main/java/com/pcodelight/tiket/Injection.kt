@@ -5,7 +5,7 @@ import com.pcodelight.tiket.model.UserDataRepository
 import com.pcodelight.tiket.model.UserDataSource
 import com.pcodelight.tiket.viewmodel.ViewModelFactory
 
-class Injection {
+object Injection {
     private val userDataSource: UserDataSource = UserDataRepository()
     private val userViewModelFactory = ViewModelFactory(userDataSource)
 

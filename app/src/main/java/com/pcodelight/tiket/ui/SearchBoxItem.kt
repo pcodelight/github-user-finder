@@ -13,10 +13,12 @@ class SearchBoxItem: AbstractItem<SearchBoxItem.ViewHolder>() {
     override fun getViewHolder(v: View): ViewHolder = ViewHolder(v)
 
     class ViewHolder(val view: View): FastAdapter.ViewHolder<SearchBoxItem>(view) {
-        override fun bindView(item: SearchBoxItem, payloads: List<Any>) {
-        }
-
-        override fun unbindView(item: SearchBoxItem) {
-        }
+        override fun bindView(item: SearchBoxItem, payloads: List<Any>) {}
+        override fun unbindView(item: SearchBoxItem) {}
     }
+
+    class State(
+        val onSearchListener: () -> Unit,
+        val text: String?
+    )
 }
