@@ -33,8 +33,12 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    private val loadingObserver = Observer<Boolean> {
+    private val loadingObserver = Observer<Boolean> { isLoading ->
+        if (isLoading) {
 
+        } else {
+
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -57,8 +61,6 @@ class MainActivity : AppCompatActivity() {
             SearchBoxItem()
         )
     }
-
-
 
     private fun initViewModel() {
         viewModel.run {
