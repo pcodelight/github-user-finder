@@ -22,6 +22,10 @@ import com.pcodelight.tiket.viewmodel.UserViewModel
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
+    private val loadingId = 0x01L
+    private val statusMsgId = 0x02L
+    private val nonContentId = listOf(loadingId, statusMsgId)
+
     private lateinit var endlessRecyclerOnScrollListener: EndlessRecyclerOnScrollListener
     private lateinit var viewModel: UserViewModel
 
@@ -40,9 +44,10 @@ class MainActivity : AppCompatActivity() {
 
     private val usersObserver = Observer<List<User>> {
         footerAdapter.clear()
+        nonContentId.forEach { id -> itemAdapter.removeByIdentifier(id) }
 
         if (it.isNotEmpty()) {
-            itemAdapter.set(
+            itemAdapter.add(
                 it.map { user ->
                     UserItem {
                         photoUrl = user.getSmallPhotoUrl()
@@ -52,23 +57,25 @@ class MainActivity : AppCompatActivity() {
             )
         } else {
             itemAdapter.set(
-                listOf(StatusActivityItem { message = "User Not Found" })
+                listOf(createActivityStatusMessage("User Not Found"))
             )
         }
     }
 
     private val errorMessageObserver = Observer<String> {
-        it.takeIf { it.isNotBlank() }?.let {
+        it.takeIf { it.isNotBlank() }?.let { msg ->
             footerAdapter.clear()
             itemAdapter.set(
-                listOf(StatusActivityItem { message = it })
+                listOf(createActivityStatusMessage(msg))
             )
         }
     }
 
     private val loadingObserver = Observer<Boolean> { isLoading ->
         if (isLoading) {
-            itemAdapter.set(listOf(LoadingItem { mode = LoadingItem.Mode.FULL }))
+            itemAdapter.set(listOf(LoadingItem { mode = LoadingItem.Mode.FULL }.apply {
+                identifier = loadingId
+            }))
         }
     }
 
@@ -98,6 +105,12 @@ class MainActivity : AppCompatActivity() {
             Toast.makeText(this@MainActivity, "Fill the name first", Toast.LENGTH_SHORT).show()
         }
     }
+
+    private fun createActivityStatusMessage(msg: String) =
+        StatusActivityItem { message = msg }.apply {
+            identifier = statusMsgId
+        }
+
 
     private fun enableEndlessScroll(enable: Boolean) {
         endlessRecyclerOnScrollListener.apply {
