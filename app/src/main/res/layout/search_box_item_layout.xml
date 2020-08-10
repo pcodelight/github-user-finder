@@ -13,9 +13,11 @@
         app:layout_constraintEnd_toStartOf="@+id/btnSearch"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:lines="1"
+        android:singleLine="true"
         android:layout_margin="8dp"
         android:importantForAutofill="no"
+        android:imeOptions="actionDone"
+        android:imeActionLabel="@string/search"
         android:inputType="text" />
 
     <Button

@@ -21,10 +21,18 @@ class SearchBoxItem(private val init: State.() -> Unit) : AbstractItem<SearchBox
                 init()
             }
 
-            view.etSearch.setText(state.text)
+            view.etSearch.apply {
+                setText(state.text)
+                setOnEditorActionListener { _, _, _ ->
+                    text.toString().takeIf { it.isNotBlank() }?.let {
+                        state.onSearchListener?.invoke(it)
+                    }
+                    false
+                }
+            }
+
             view.btnSearch.setOnClickListener {
                 val text = view.etSearch.text.toString()
-
                 state.text = text
                 state.onSearchListener?.invoke(text)
             }

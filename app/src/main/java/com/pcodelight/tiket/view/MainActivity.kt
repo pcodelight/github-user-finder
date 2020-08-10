@@ -17,10 +17,7 @@ import com.pcodelight.tiket.Api
 import com.pcodelight.tiket.Injection
 import com.pcodelight.tiket.R
 import com.pcodelight.tiket.model.User
-import com.pcodelight.tiket.ui.LoadingItem
-import com.pcodelight.tiket.ui.SearchBoxItem
-import com.pcodelight.tiket.ui.StatusActivityItem
-import com.pcodelight.tiket.ui.UserItem
+import com.pcodelight.tiket.ui.*
 import com.pcodelight.tiket.viewmodel.UserViewModel
 import kotlinx.android.synthetic.main.activity_main.*
 
