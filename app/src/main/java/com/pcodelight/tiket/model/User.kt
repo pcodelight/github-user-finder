@@ -10,5 +10,5 @@ class User: Serializable {
     @SerializedName("avatar_url")
     var photoUrl: String = ""
 
-    fun getSmallPhotoUrl() = "$photoUrl&s=48"
+    fun getSmallPhotoUrl() = "$photoUrl&s=64"
 }
