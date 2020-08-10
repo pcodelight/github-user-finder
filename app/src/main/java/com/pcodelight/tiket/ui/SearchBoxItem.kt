@@ -33,7 +33,6 @@ class SearchBoxItem(private val init: State.() -> Unit) : AbstractItem<SearchBox
 
             view.btnSearch.setOnClickListener {
                 val text = view.etSearch.text.toString()
-                state.text = text
                 state.onSearchListener?.invoke(text)
             }
         }

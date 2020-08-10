@@ -33,6 +33,8 @@ class UserViewModel(private val repo: UserDataSource) : ViewModel() {
         repo.searchUser(query, page, object : ApiCallback<User> {
             override fun onSuccess(data: List<User>?) {
                 _isLoading.postValue(false)
+                _errorMsg.postValue("")
+
                 data?.let {
                     if (page > 1) {
                         _users.postValue(_users.value?.plus(it))

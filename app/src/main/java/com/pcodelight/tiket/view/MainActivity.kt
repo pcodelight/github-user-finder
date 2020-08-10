@@ -58,10 +58,12 @@ class MainActivity : AppCompatActivity() {
     }
 
     private val errorMessageObserver = Observer<String> {
-        footerAdapter.clear()
-        itemAdapter.set(
-            listOf(StatusActivityItem { message = it })
-        )
+        it.takeIf { it.isNotBlank() }?.let {
+            footerAdapter.clear()
+            itemAdapter.set(
+                listOf(StatusActivityItem { message = it })
+            )
+        }
     }
 
     private val loadingObserver = Observer<Boolean> { isLoading ->
