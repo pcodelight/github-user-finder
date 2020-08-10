@@ -19,6 +19,7 @@ class UserItem(init: State.() -> Unit) : AbstractItem<UserItem.ViewHolder>() {
         override fun bindView(item: UserItem, payloads: List<Any>) {
             Glide.with(view)
                 .load(item.state.photoUrl)
+                .placeholder(R.drawable.default_photo)
                 .fitCenter()
                 .circleCrop()
                 .into(view.ivPhoto)
