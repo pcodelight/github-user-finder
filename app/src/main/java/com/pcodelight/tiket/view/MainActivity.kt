@@ -1,6 +1,7 @@
 package com.pcodelight.tiket.view
 
 import android.os.Bundle
+import android.os.PersistableBundle
 import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -42,10 +43,10 @@ class MainActivity : AppCompatActivity() {
 
     private var currentPage: Int = 1
     private var query: String = ""
-    private var hasNext: Boolean = false
 
     private val usersObserver = Observer<List<User>> {
         footerAdapter.clear()
+
         if (it.isNotEmpty()) {
             itemAdapter.set(
                 it.map { user ->
@@ -76,10 +77,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private val hasNextObserver = Observer<Boolean> {
-        hasNext = it
-        endlessRecyclerOnScrollListener.apply {
-            if (hasNext) enable() else disable()
-        }
+        enableEndlessScroll(it)
     }
 
     private val pageObserver = Observer<Int> {
@@ -91,15 +89,24 @@ class MainActivity : AppCompatActivity() {
     }
 
     private val onSearch: (String) -> Unit = {
-        footerAdapter.clear()
-        itemAdapter.clear()
+        if (it.isNotBlank()) {
+            footerAdapter.clear()
+            itemAdapter.clear()
 
-        endlessRecyclerOnScrollListener.apply {
-            disable()
-            resetPageCount(1)
+            endlessRecyclerOnScrollListener.apply {
+                disable()
+                resetPageCount(0)
+            }
+            viewModel.searchUsers(it, 1)
+        } else {
+            Toast.makeText(this@MainActivity, "Fill the name first", Toast.LENGTH_SHORT).show()
         }
+    }
 
-        viewModel.searchUsers(it, 1)
+    private fun enableEndlessScroll(enable: Boolean) {
+        endlessRecyclerOnScrollListener.apply {
+            if (enable) enable() else disable()
+        }
     }
 
     private fun loadMore() {
@@ -121,18 +128,30 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        initRender()
         initViewModel()
+        initRender()
+    }
 
-        viewModel.query.value?.let {
-            onSearch(it)
+    override fun onRestoreInstanceState(savedInstanceState: Bundle?) {
+        super.onRestoreInstanceState(savedInstanceState)
+        query = savedInstanceState?.getString("last_query") ?: ""
+
+        val hadSearchingBefore = query.isNotBlank()
+        val isUserListRecycled = viewModel.users.value == null
+        if (hadSearchingBefore && isUserListRecycled) {
+            onSearch(query)
         }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putString("last_query", query)
     }
 
     private fun initRender() {
         headerAdapter.add(
             SearchBoxItem {
-                viewModel.query.value?.let {
+                query.takeIf { it.isNotBlank() }?.let {
                     text = it
                 }
                 onSearchListener = onSearch
