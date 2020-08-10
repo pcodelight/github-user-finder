@@ -21,6 +21,7 @@ class SearchBoxItem(private val init: State.() -> Unit) : AbstractItem<SearchBox
                 init()
             }
 
+            view.etSearch.setText(state.text)
             view.btnSearch.setOnClickListener {
                 val text = view.etSearch.text.toString()
 

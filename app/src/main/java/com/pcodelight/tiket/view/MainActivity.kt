@@ -128,6 +128,9 @@ class MainActivity : AppCompatActivity() {
     private fun initRender() {
         headerAdapter.add(
             SearchBoxItem {
+                viewModel.query.value?.let {
+                    text = it
+                }
                 onSearchListener = onSearch
             }
         )
@@ -160,6 +163,14 @@ class MainActivity : AppCompatActivity() {
             hasNext.observe(this@MainActivity, hasNextObserver)
             page.observe(this@MainActivity, pageObserver)
             query.observe(this@MainActivity, queryObserver)
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        viewModel.query.value?.let {
+            viewModel.searchUsers(it, viewModel.page.value ?: 1)
         }
     }
 }
