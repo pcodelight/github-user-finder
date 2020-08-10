@@ -1,8 +1,6 @@
 package com.pcodelight.tiket.view
 
 import android.os.Bundle
-import android.os.PersistableBundle
-import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
@@ -20,8 +18,8 @@ import com.pcodelight.tiket.Injection
 import com.pcodelight.tiket.R
 import com.pcodelight.tiket.model.User
 import com.pcodelight.tiket.ui.LoadingItem
-import com.pcodelight.tiket.ui.StatusActivityItem
 import com.pcodelight.tiket.ui.SearchBoxItem
+import com.pcodelight.tiket.ui.StatusActivityItem
 import com.pcodelight.tiket.ui.UserItem
 import com.pcodelight.tiket.viewmodel.UserViewModel
 import kotlinx.android.synthetic.main.activity_main.*
@@ -40,7 +38,6 @@ class MainActivity : AppCompatActivity() {
             footerAdapter
         )
     )
-
     private var currentPage: Int = 1
     private var query: String = ""
 

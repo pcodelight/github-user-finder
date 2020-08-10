@@ -1,6 +1,5 @@
 package com.pcodelight.tiket.viewmodel
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -8,7 +7,6 @@ import com.pcodelight.tiket.Api
 import com.pcodelight.tiket.model.User
 import com.pcodelight.tiket.model.UserDataSource
 import com.pcodelight.tiket.service.ApiCallback
-import java.util.*
 
 class UserViewModel(private val repo: UserDataSource) : ViewModel() {
     private val _users = MutableLiveData<List<User>>()

@@ -14,7 +14,7 @@ class StatusActivityItem(init: State.() -> Unit) : AbstractItem<StatusActivityIt
         get() = StatusActivityItem::class.java.hashCode()
     override fun getViewHolder(v: View): ViewHolder = ViewHolder(v)
 
-    class ViewHolder(val view: View): FastAdapter.ViewHolder<StatusActivityItem>(view) {
+    class ViewHolder(private val view: View): FastAdapter.ViewHolder<StatusActivityItem>(view) {
         override fun bindView(item: StatusActivityItem, payloads: List<Any>) {
            view.tvMessage.text = item.state.message
         }
@@ -23,6 +23,5 @@ class StatusActivityItem(init: State.() -> Unit) : AbstractItem<StatusActivityIt
 
     class State {
         var message: String = ""
-        var imgUrl: String = ""
     }
 }
