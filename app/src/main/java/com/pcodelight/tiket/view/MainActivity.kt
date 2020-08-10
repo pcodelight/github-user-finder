@@ -93,6 +93,8 @@ class MainActivity : AppCompatActivity() {
 
     private val onSearch: (String) -> Unit = {
         if (it.isNotBlank()) {
+            hideKeyboard(this@MainActivity)
+
             footerAdapter.clear()
             itemAdapter.clear()
 
