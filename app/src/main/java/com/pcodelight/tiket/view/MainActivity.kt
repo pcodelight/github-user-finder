@@ -123,6 +123,10 @@ class MainActivity : AppCompatActivity() {
 
         initRender()
         initViewModel()
+
+        viewModel.query.value?.let {
+            onSearch(it)
+        }
     }
 
     private fun initRender() {
@@ -163,14 +167,6 @@ class MainActivity : AppCompatActivity() {
             hasNext.observe(this@MainActivity, hasNextObserver)
             page.observe(this@MainActivity, pageObserver)
             query.observe(this@MainActivity, queryObserver)
-        }
-    }
-
-    override fun onResume() {
-        super.onResume()
-
-        viewModel.query.value?.let {
-            viewModel.searchUsers(it, viewModel.page.value ?: 1)
         }
     }
 }

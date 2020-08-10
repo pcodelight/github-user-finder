@@ -17,7 +17,9 @@ class UserDataRepository: UserDataSource {
 
         call?.enqueue(object: Callback<UserResponse> {
             override fun onFailure(call: Call<UserResponse>, t: Throwable) {
-                callback.onError(t.localizedMessage)
+                if (!call.isCanceled) {
+                    callback.onError(t.localizedMessage)
+                }
             }
 
             override fun onResponse(call: Call<UserResponse>, response: Response<UserResponse>) {

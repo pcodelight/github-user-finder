@@ -30,6 +30,8 @@ class UserViewModel(private val repo: UserDataSource) : ViewModel() {
         _page.postValue(page)
 
         _isLoading.postValue(page == 1)
+
+        repo.cancel()
         repo.searchUser(query, page, object : ApiCallback<User> {
             override fun onSuccess(data: List<User>?) {
                 _isLoading.postValue(false)
