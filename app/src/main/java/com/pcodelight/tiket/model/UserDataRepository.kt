@@ -13,7 +13,7 @@ class UserDataRepository: UserDataSource {
 
     override fun searchUser(query: String, page: Int, callback: ApiCallback<User>) {
         call = Api.instance.create(GithubService::class.java)
-            .searchUser(query)
+            .searchUser(query, page)
 
         call?.enqueue(object: Callback<UserResponse> {
             override fun onFailure(call: Call<UserResponse>, t: Throwable) {
@@ -27,7 +27,7 @@ class UserDataRepository: UserDataSource {
                     } else {
                         callback.onError("There is someting wrong :(")
                     }
-                }
+                } ?: callback.onError(response.raw().message())
             }
         })
     }
