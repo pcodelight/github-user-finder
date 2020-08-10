@@ -27,7 +27,7 @@ class UserDataRepository: UserDataSource {
                     } else {
                         callback.onError("There is someting wrong :(")
                     }
-                } ?: callback.onError(response.raw().message())
+                } ?: callback.onError(response.message())
             }
         })
     }
