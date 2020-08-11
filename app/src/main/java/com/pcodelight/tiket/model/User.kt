@@ -4,6 +4,8 @@ import com.google.gson.annotations.SerializedName
 import java.io.Serializable
 
 class User: Serializable {
+    var id: Long = 0
+
     @SerializedName("login")
     var name: String = ""
 

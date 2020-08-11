@@ -36,7 +36,11 @@ class UserViewModel(private val repo: UserDataSource) : ViewModel() {
                 _errorMsg.postValue("")
 
                 data?.let {
-                    _users.postValue(it)
+                    if (page > 1) {
+                        _users.postValue(_users.value?.plus(it))
+                    } else {
+                        _users.postValue(it)
+                    }
                     _hasNext.postValue(it.size >= Api.OBJECT_PER_PAGE)
                 }
             }

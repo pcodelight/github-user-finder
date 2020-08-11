@@ -41,25 +41,40 @@ class MainActivity : AppCompatActivity() {
     )
     private var currentPage: Int = 1
     private var query: String = ""
+    private var oldList: List<User> = emptyList()
 
     private val usersObserver = Observer<List<User>> {
         footerAdapter.clear()
         nonContentId.forEach { id -> itemAdapter.removeByIdentifier(id) }
 
         if (it.isNotEmpty()) {
-            itemAdapter.add(
-                it.map { user ->
+            if (oldList.isEmpty()) {
+                itemAdapter.set(it.map { user ->
                     UserItem {
                         photoUrl = user.getSmallPhotoUrl()
                         name = user.name
                     }
-                }
-            )
+                })
+            } else {
+                val lastId = oldList.last().id
+                val newDataFromPosition = it.indexOfFirst { user -> user.id == lastId }
+                val subListData = it.subList(newDataFromPosition + 1, it.lastIndex + 1)
+                itemAdapter.add(
+                    subListData.map { user ->
+                        UserItem {
+                            photoUrl = user.getSmallPhotoUrl()
+                            name = user.name
+                        }
+                    }
+                )
+            }
         } else {
             itemAdapter.set(
                 listOf(createActivityStatusMessage("User Not Found"))
             )
         }
+
+        oldList = it
     }
 
     private val errorMessageObserver = Observer<String> {
